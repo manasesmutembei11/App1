@@ -1,0 +1,55 @@
+﻿@page "/people/details"
+@inject App1.Data.App1Context DB
+@using App1.Data
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Person</h4>
+    <hr />
+    @if (person is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">FirstName</dt>
+            <dd class="col-sm-10">@person.FirstName</dd>
+            <dt class="col-sm-2">LastName</dt>
+            <dd class="col-sm-10">@person.LastName</dd>
+            <dt class="col-sm-2">DateOfBirth</dt>
+            <dd class="col-sm-10">@person.DateOfBirth</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@person.Email</dd>
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@person.Name</dd>
+            <dt class="col-sm-2">Age</dt>
+            <dd class="col-sm-10">@person.Age</dd>
+        </dl>
+        <div>
+            <a href="@($"/people/edit?id={person.Id}")">Edit</a> |
+            <a href="@($"/people")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Person? person;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        person = await DB.Person.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (person is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
