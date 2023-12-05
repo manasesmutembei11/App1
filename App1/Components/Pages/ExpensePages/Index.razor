@@ -1,0 +1,26 @@
+﻿@page "/expenses"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject App1.Data.App1Context DB
+@using App1.Data
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="expenses/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.Expense">
+    <PropertyColumn Property="expense => expense.Source" />
+    <PropertyColumn Property="expense => expense.Amount" />
+    <PropertyColumn Property="expense => expense.ExpenseCategory" />
+    <PropertyColumn Property="expense => expense.ExpenseDate" />
+    <PropertyColumn Property="expense => expense.ExpenseDescription" />
+
+    <TemplateColumn Context="expense">
+        <a href="@($"expenses/edit?id={expense.Id}")">Edit</a> |
+        <a href="@($"expenses/details?id={expense.Id}")">Details</a> |
+        <a href="@($"expenses/delete?id={expense.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using App1.Data;
 using Microsoft.AspNetCore.Identity;
+using App1.Repositories;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<App1Context>(options =>
@@ -10,9 +12,13 @@ builder.Services.AddDbContext<App1Context>(options =>
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();;
 
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// In your Startup.cs or equivalent configuration file
+
 
 var app = builder.Build();
 

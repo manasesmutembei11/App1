@@ -1,0 +1,53 @@
+﻿@page "/incomes/details"
+@inject App1.Data.App1Context DB
+@using App1.Data
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Income</h4>
+    <hr />
+    @if (income is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Source</dt>
+            <dd class="col-sm-10">@income.Source</dd>
+            <dt class="col-sm-2">Amount</dt>
+            <dd class="col-sm-10">@income.Amount</dd>
+            <dt class="col-sm-2">IncomeCategory</dt>
+            <dd class="col-sm-10">@income.IncomeCategory</dd>
+            <dt class="col-sm-2">IncomeDate</dt>
+            <dd class="col-sm-10">@income.IncomeDate</dd>
+            <dt class="col-sm-2">IncomeDescription</dt>
+            <dd class="col-sm-10">@income.IncomeDescription</dd>
+        </dl>
+        <div>
+            <a href="@($"/incomes/edit?id={income.Id}")">Edit</a> |
+            <a href="@($"/incomes")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Income? income;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        income = await DB.Income.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (income is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

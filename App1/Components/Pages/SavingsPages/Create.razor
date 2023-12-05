@@ -1,0 +1,63 @@
+﻿@page "/savings/create"
+@inject App1.Data.App1Context DB
+@using App1.Data
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Savings</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Savings" OnValidSubmit="AddSavings" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="goalname" class="form-label">GoalName:</label> 
+                <InputText id="goalname" @bind-Value="Savings.GoalName" class="form-control" /> 
+                <ValidationMessage For="() => Savings.GoalName" class="text-danger" />
+            </div>        
+            <div class="mb-3">
+                <label for="targetamount" class="form-label">TargetAmount:</label> 
+                <InputNumber id="targetamount" @bind-Value="Savings.TargetAmount" class="form-control" /> 
+                <ValidationMessage For="() => Savings.TargetAmount" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="currentamount" class="form-label">CurrentAmount:</label> 
+                <InputNumber id="currentamount" @bind-Value="Savings.CurrentAmount" class="form-control" /> 
+                <ValidationMessage For="() => Savings.CurrentAmount" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="targetdate" class="form-label">TargetDate:</label> 
+                <InputDate id="targetdate" @bind-Value="Savings.TargetDate" class="form-control" /> 
+                <ValidationMessage For="() => Savings.TargetDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="savingdescription" class="form-label">SavingDescription:</label> 
+                <InputText id="savingdescription" @bind-Value="Savings.SavingDescription" class="form-control" /> 
+                <ValidationMessage For="() => Savings.SavingDescription" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/savings">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Savings Savings { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddSavings()
+    {
+        DB.Savings.Add(Savings);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/savings");
+    }
+}

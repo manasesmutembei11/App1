@@ -1,0 +1,106 @@
+﻿@page "/Budgets/edit"
+@inject App1.Data.App1Context DB
+@using App1.Data
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Budget</h4>
+<hr />
+@if (Budget is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Budget" OnValidSubmit="UpdateBudget" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Budget.Id" value="@Budget.Id" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <InputText id="title" @bind-Value="Budget.Title" class="form-control" />
+                    <ValidationMessage For="() => Budget.Title" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount:</label>
+                    <InputNumber id="amount" @bind-Value="Budget.Amount" class="form-control" />
+                    <ValidationMessage For="() => Budget.Amount" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category:</label>
+                    <InputText id="category" @bind-Value="Budget.Category" class="form-control" />
+                    <ValidationMessage For="() => Budget.Category" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateauthored" class="form-label">DateAuthored:</label>
+                    <InputDate id="dateauthored" @bind-Value="Budget.DateAuthored" class="form-control" />
+                    <ValidationMessage For="() => Budget.DateAuthored" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <InputText id="description" @bind-Value="Budget.Description" class="form-control" />
+                    <ValidationMessage For="() => Budget.Description" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/budgets">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Budget? Budget { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Budget ??= await DB.Budget.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Budget is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateBudget()
+    {
+        DB.Attach(Budget!).State = EntityState.Modified;
+
+        try
+        {
+            await DB.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!BudgetExists(Budget!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/budgets");
+    }
+
+    bool BudgetExists(int id)
+    {
+        return DB.Budget.Any(e => e.Id == id);
+    }
+}

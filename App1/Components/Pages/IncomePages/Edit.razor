@@ -1,0 +1,106 @@
+﻿@page "/Incomes/edit"
+@inject App1.Data.App1Context DB
+@using App1.Data
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Income</h4>
+<hr />
+@if (Income is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Income" OnValidSubmit="UpdateIncome" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Income.Id" value="@Income.Id" />
+                <div class="mb-3">
+                    <label for="source" class="form-label">Source:</label>
+                    <InputText id="source" @bind-Value="Income.Source" class="form-control" />
+                    <ValidationMessage For="() => Income.Source" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount:</label>
+                    <InputNumber id="amount" @bind-Value="Income.Amount" class="form-control" />
+                    <ValidationMessage For="() => Income.Amount" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="incomecategory" class="form-label">IncomeCategory:</label>
+                    <InputText id="incomecategory" @bind-Value="Income.IncomeCategory" class="form-control" />
+                    <ValidationMessage For="() => Income.IncomeCategory" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="incomedate" class="form-label">IncomeDate:</label>
+                    <InputDate id="incomedate" @bind-Value="Income.IncomeDate" class="form-control" />
+                    <ValidationMessage For="() => Income.IncomeDate" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="incomedescription" class="form-label">IncomeDescription:</label>
+                    <InputText id="incomedescription" @bind-Value="Income.IncomeDescription" class="form-control" />
+                    <ValidationMessage For="() => Income.IncomeDescription" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/incomes">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Income? Income { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Income ??= await DB.Income.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Income is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateIncome()
+    {
+        DB.Attach(Income!).State = EntityState.Modified;
+
+        try
+        {
+            await DB.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!IncomeExists(Income!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/incomes");
+    }
+
+    bool IncomeExists(int id)
+    {
+        return DB.Income.Any(e => e.Id == id);
+    }
+}

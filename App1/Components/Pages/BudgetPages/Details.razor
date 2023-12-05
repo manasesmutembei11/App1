@@ -1,0 +1,53 @@
+﻿@page "/budgets/details"
+@inject App1.Data.App1Context DB
+@using App1.Data
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Budget</h4>
+    <hr />
+    @if (budget is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@budget.Title</dd>
+            <dt class="col-sm-2">Amount</dt>
+            <dd class="col-sm-10">@budget.Amount</dd>
+            <dt class="col-sm-2">Category</dt>
+            <dd class="col-sm-10">@budget.Category</dd>
+            <dt class="col-sm-2">DateAuthored</dt>
+            <dd class="col-sm-10">@budget.DateAuthored</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@budget.Description</dd>
+        </dl>
+        <div>
+            <a href="@($"/budgets/edit?id={budget.Id}")">Edit</a> |
+            <a href="@($"/budgets")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Budget? budget;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        budget = await DB.Budget.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (budget is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

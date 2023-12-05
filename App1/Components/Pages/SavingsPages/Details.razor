@@ -1,0 +1,53 @@
+﻿@page "/savings/details"
+@inject App1.Data.App1Context DB
+@using App1.Data
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Savings</h4>
+    <hr />
+    @if (savings is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">GoalName</dt>
+            <dd class="col-sm-10">@savings.GoalName</dd>
+            <dt class="col-sm-2">TargetAmount</dt>
+            <dd class="col-sm-10">@savings.TargetAmount</dd>
+            <dt class="col-sm-2">CurrentAmount</dt>
+            <dd class="col-sm-10">@savings.CurrentAmount</dd>
+            <dt class="col-sm-2">TargetDate</dt>
+            <dd class="col-sm-10">@savings.TargetDate</dd>
+            <dt class="col-sm-2">SavingDescription</dt>
+            <dd class="col-sm-10">@savings.SavingDescription</dd>
+        </dl>
+        <div>
+            <a href="@($"/savings/edit?id={savings.Id}")">Edit</a> |
+            <a href="@($"/savings")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Savings? savings;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        savings = await DB.Savings.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (savings is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

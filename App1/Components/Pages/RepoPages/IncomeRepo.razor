@@ -1,0 +1,52 @@
+﻿@page "/IncomeList"
+// Check the namespaces in your component
+@inject App1.Repositories.IIncomeRepository IncomeRepository
+
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@using App1.Data
+@using App1.Repositories
+
+
+
+
+<h3>Income List</h3>
+
+@if (incomes != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Amount</th>
+                <!-- Add more columns as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var income in incomes)
+            {
+                <tr>
+                    <td>@income.Id</td>
+                    <td>@income.IncomeDescription</td>
+                    <td>@income.Amount</td>
+                    <!-- Display more properties as needed -->
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No income data available.</p>
+}
+
+@code {
+    private IEnumerable<Income> incomes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the income data when the page is initialized
+        incomes = await IncomeRepository.GetAll();
+    }
+}

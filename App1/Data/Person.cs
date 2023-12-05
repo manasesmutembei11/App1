@@ -6,7 +6,7 @@ namespace App1.Data
     {
         public Person()
         {
-            // Initialize non-nullable properties here
+
             FirstName = "";
             LastName = "";
             DateOfBirth = DateTime.Now;
