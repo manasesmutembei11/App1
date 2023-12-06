@@ -12,6 +12,10 @@ builder.Services.AddDbContext<App1Context>(options =>
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();;
 
+builder.Services.AddScoped<IIncomeRepository, IncomeRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

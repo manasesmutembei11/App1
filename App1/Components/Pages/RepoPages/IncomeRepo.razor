@@ -1,6 +1,5 @@
 ﻿@page "/IncomeList"
-// Check the namespaces in your component
-@inject App1.Repositories.IIncomeRepository IncomeRepository
+@inject IIncomeRepository IncomeRepository
 
 @using System.Collections.Generic
 @using System.Threading.Tasks
@@ -17,9 +16,9 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Amount</th>
+                <th>ID    </th>
+                <th>Name  </th>
+                <th>Amount   </th>
                 <!-- Add more columns as needed -->
             </tr>
         </thead>

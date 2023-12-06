@@ -1,0 +1,56 @@
+﻿@page "/PersonList"
+@inject IPersonRepository PersonRepository
+
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@using App1.Data
+@using App1.Repositories
+
+<h3>Person List</h3>
+
+@if (persons != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID    </th>
+                <th>First Name    </th>
+                <th>Last Name     </th>
+                <th>Date of Birth     </th>
+                <th>Email     </th>
+                <th>Name   </th>
+                <th>Age     </th>
+                <!-- Add more columns as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in persons)
+            {
+                <tr>
+                    <td>@person.Id    </td>
+                    <td>@person.FirstName     </td>
+                    <td>@person.LastName     </td>
+                    <td>@person.DateOfBirth.ToShortDateString()    </td>
+                    <td>@person.Email</td>
+                    <td>@person.Name</td>
+                    <td>@person.Age</td>
+                    <!-- Display more properties as needed -->
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No person data available.</p>
+}
+
+@code {
+    private IEnumerable<Person> persons;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the person data when the page is initialized
+        persons = await PersonRepository.GetAll();
+    }
+}
