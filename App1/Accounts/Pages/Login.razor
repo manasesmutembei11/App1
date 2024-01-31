@@ -1,0 +1,46 @@
+﻿@page "/Login"
+@using App1.Accounts.Pages
+
+
+@code{
+}
+
+<div class="container border" style="padding:20px">
+    <form method="post">
+        <div class="text-danger" asp-validation-summary="All"></div>
+        <div class="mb-3 row">
+            <div class="col-2">
+                <label asp-for="LoginCredential.UserName">User Name</label>
+            </div>
+            <div class="col-5">
+                <input type="text" asp-for="LoginCredential.UserName" class="form-control" />
+                <span class="text-danger" asp-validation-for="LoginCredential.UserName"></span>
+            </div>            
+        </div>
+        <div class="mb-3 row">
+            <div class="col-2">
+                <label asp-for="LoginCredential.Password">Password</label>
+            </div>
+            <div class="col-5">
+                <input type="password" asp-for="LoginCredential.Password" class="form-control" />
+                <span class="text-danger" asp-validation-for="LoginCredential.Password"></span>
+            </div>            
+        </div>
+        <div class="mb-3 row form-check">
+            <div class="col-2">
+                <input type="checkbox" class="form-check-input" label="LoginCredential.RememberMe" />
+                <label class="form-check-label" asp-for="LoginCredential.RememberMe">Remember Me.</label>
+            </div>
+            <div class="col-5">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <div class="col-2">
+                <input type="submit" class="btn btn-primary" value="Login" />
+            </div>
+            <div class="col-5">                
+            </div>
+        </div>
+        <AntiForgeryToken />
+    </form>
+</div>
